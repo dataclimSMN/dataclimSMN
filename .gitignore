@@ -21,3 +21,5 @@ __pycache__/
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+# Archivos grandes que no deben subirse
+*.geojson
