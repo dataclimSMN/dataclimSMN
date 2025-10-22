@@ -13,10 +13,6 @@ __pycache__/
 
 # Archivos grandes o innecesarios
 *.zip
-*.shp
-*.dbf
-*.prj
-*.cpg
 
 # Archivos de sistema
 .DS_Store
@@ -24,5 +20,4 @@ Thumbs.db
 # Archivos grandes que no deben subirse
 *.geojson
 logs_uso_api.txt
-data/Estados/*.shx
-data/Municipios/*.shx
+

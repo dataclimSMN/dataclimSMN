@@ -14,6 +14,7 @@ import pandas as pd
 import json
 from fastapi import Request
 from datetime import datetime
+from pathlib import Path
 
 app = FastAPI(title="API de Estaciones Climatológicas - ITSM")
 
@@ -410,10 +411,10 @@ def parse_diarios_txt(lines, est):
 
 
 # ----------------------- GeoJSON -----------------------
-# Cargar shapefiles en memoria
-gdf_estados = gpd.read_file("data/Estados/Estados.shp")
-gdf_municipios = gpd.read_file("data/Municipios/Municipios.shp")
+BASE_DIR = Path(__file__).resolve().parent
 
+gdf_estados = gpd.read_file(BASE_DIR / "data" / "Estados" / "Estados.shp")
+gdf_municipios = gpd.read_file(BASE_DIR / "data" / "Municipios" / "Municipios.shp")
 # ---------------------- GEOJSON ESTADOS ----------------------
 @app.get("/api/estados_geojson")
 def get_estados_geojson(estado: str = Query("TODOS")):
