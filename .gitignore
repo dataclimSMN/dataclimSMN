@@ -24,3 +24,5 @@ Thumbs.db
 # Archivos grandes que no deben subirse
 *.geojson
 logs_uso_api.txt
+data/Estados/*.shx
+data/Municipios/*.shx
