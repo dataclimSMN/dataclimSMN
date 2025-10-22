@@ -16,6 +16,10 @@ import json
 from fastapi import Request
 from datetime import datetime
 from pathlib import Path
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from pydantic import BaseModel
 
 app = FastAPI(title="API de Estaciones Climatológicas - ITSM")
 
@@ -594,3 +598,55 @@ def descargar_csv(
         media_type="application/zip",
         headers={"Content-Disposition": f"attachment; filename={zip_filename}"}
     )
+# Modelo de datos para que Swagger muestre los campos
+class Sugerencia(BaseModel):
+    nombre: str
+    mensaje: str
+
+@app.post("/api/enviar_sugerencia")
+async def enviar_sugerencia(data: Sugerencia):
+    print(f"[DEBUG] Datos recibidos: {data}")
+    
+    nombre = data.nombre.strip()
+    mensaje = data.mensaje.strip()
+    
+    print(f"[DEBUG] Nombre procesado: '{nombre}'")
+    print(f"[DEBUG] Mensaje procesado: '{mensaje}'")
+
+    if not nombre or not mensaje:
+        return {"status": "error", "detail": "Campos incompletos"}
+
+    # ======= CONFIGURACIÓN DEL CORREO =======
+    remitente = "dataclimsmn@gmail.com"
+    destinatario = "dataclimsmn@gmail.com"
+    contraseña = os.getenv("GMAIL_APP_PASSWORD")  
+
+    asunto = "Nuevo mensaje de sugerencia - DataClim SMN"
+    cuerpo = f"""
+    Has recibido una nueva sugerencia desde la API DataClim-SMN.
+
+        Nombre: {nombre}
+        Mensaje:
+    {mensaje}
+
+    Enviado el {datetime.now().strftime("%d/%m/%Y a las %H:%M:%S")}
+    """
+
+    msg = MIMEMultipart()
+    msg["From"] = remitente
+    msg["To"] = destinatario
+    msg["Subject"] = asunto
+    msg.attach(MIMEText(cuerpo, "plain"))
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(remitente, contraseña)
+            server.send_message(msg)
+
+        print(f"[INFO] Sugerencia enviada correctamente por {nombre}")
+        return {"status": "ok", "detail": "Sugerencia enviada correctamente"}
+
+    except Exception as e:
+        print(f"[ERROR] No se pudo enviar el correo: {e}")
+        return {"status": "error", "detail": str(e)}

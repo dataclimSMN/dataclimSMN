@@ -509,3 +509,59 @@ async function cargarGeoJSON(estado, municipio) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("✅ Script cargado correctamente");
+
+  const form = document.getElementById("sugerenciaForm");
+  const resultado = document.getElementById("resultadoSugerencia");
+
+  console.log("🔍 Formulario encontrado:", form);
+  console.log("🔍 Elemento resultado encontrado:", resultado);
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      console.log("🎯 Formulario enviado - evento capturado");
+
+      const nombre = document.getElementById("nombreSugerencia").value.trim();
+      const mensaje = document.getElementById("mensajeSugerencia").value.trim();
+
+      console.log("📝 Datos capturados:", { nombre, mensaje });
+
+      if (!nombre || !mensaje) {
+        console.log("⚠️ Campos incompletos");
+        resultado.innerHTML = `<p class="text-danger">Por favor completa todos los campos.</p>`;
+        return;
+      }
+
+      resultado.innerHTML = `<p class="text-info">Enviando sugerencia...</p>`;
+      console.log("🔄 Iniciando fetch...");
+
+      try {
+        const baseURL = window.location.origin;
+        const res = await fetch(`${baseURL}/api/enviar_sugerencia`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, mensaje }),
+        });
+
+        console.log("📨 Respuesta recibida - Status:", res.status);
+        
+        const data = await res.json();
+        console.log("📊 Datos de respuesta:", data);
+
+        if (res.ok) {
+          resultado.innerHTML = `<p class="text-success">✅ ¡Gracias por tu sugerencia! Se ha enviado correctamente.</p>`;
+          form.reset();
+        } else {
+          resultado.innerHTML = `<p class="text-danger">❌ Error: ${data.detail || "No se pudo enviar el mensaje."}</p>`;
+        }
+      } catch (err) {
+        console.error("💥 Error en fetch:", err);
+        resultado.innerHTML = `<p class="text-danger">❌ Ocurrió un error al enviar la sugerencia: ${err.message}</p>`;
+      }
+    });
+  } else {
+    console.warn("⚠️ No se encontró el formulario de sugerencias en el DOM.");
+  }
+});

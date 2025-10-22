@@ -24,6 +24,7 @@
             <!-- Centro: título y subtítulo -->
             <div class="col-4 col-md-6 text-center">
               <h1 class="display-4 fw-bold">DataClim-SMN</h1>
+              <!-- CORREGIDO: Quité las llaves dobles }} -->
               <p class="lead">API para la descarga de datos climatológicos del Servicio Meteorológico Nacional (SMN), México</p>
             </div>
       
@@ -33,8 +34,7 @@
             </div>
           </div>
         </div>
-      </div>
-      
+    </div>
 
     <div class="container">
         <div class="row">
@@ -49,29 +49,27 @@
                                 <option value="">Seleccionar estado</option>
                               </select>
                             </div>
-                          </div>
+                        </div>
                           
-                          <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="mb-3">
                               <label for="municipioSelect" class="form-label">Municipio</label>
                               <select class="form-select" id="municipioSelect" disabled>
                                 <option value="">Seleccionar municipio</option>
-                                <!-- la opción TODOS se agrega dinámicamente en script.js -->
                               </select>
                             </div>
-                          </div>
+                        </div>
                           
-                          <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="mb-3">
                               <label for="estacionSelect" class="form-label">Estación</label>
                               <select class="form-select" id="estacionSelect" disabled>
                                 <option value="">Seleccionar estación</option>
-                                <!-- la opción TODAS se agrega dinámicamente en script.js -->
                               </select>
                             </div>
-                          </div>
+                        </div>
                           
-                          <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="mb-3">
                               <label for="dataSelect" class="form-label">Tipo de Datos</label>
                               <select class="form-select" id="dataSelect" disabled>
@@ -86,9 +84,9 @@
                                 <option value="EXTREMOS">Extremos</option>
                               </select>
                             </div>
-                          </div>
+                        </div>
                           
-                          <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="mb-3">
                               <label for="statusSelect" class="form-label">Situación</label>
                               <select class="form-select" id="statusSelect">
@@ -97,8 +95,8 @@
                                 <option value="SUSPENDIDA">Suspendidas</option>
                               </select>
                             </div>
-                          </div>
-                          
+                        </div>
+                    </div> <!-- Cierre del row de filtros -->
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-primary me-md-2" type="button" id="btnBuscar">
@@ -121,31 +119,57 @@
                     <div class="card-body">
                         <div id="map" class="map-container"></div>
                     </div>
-                    <!-- Contenedor con el texto institucional -->
-<div class="container mt-4">
-  <div class="card">
-    <div class="card-body">
-      <p>
-        <strong>Como citar:</strong>
-        <p>Organización XYZ. (2025). API de servicios financieros. Recuperado de 
-        <a href="https://ejemploservicios.com/api/v1" target="_blank">
-          https://ejemploservicios.com/api/v1
-        </a></p>
-      </p>
-      <p>
-       <p><strong> Desarrollado por:</strong></p>
-        <strong>Bringas Murillo Jesus Jair</strong>; durante la realización de su Residencia Profesional 
-        para la obtención del grado de Ingeniero en sistemas Computacionales del 
-        Instituto Tecnológico Superior de Misantla (ITSM), Veracruz, México, bajo la supervisión y 
-        coordinación del Dr. Ojilve Ramón Medrano Pérez, en el marco del proyecto No. CIR/045/2024 
-        “Estudio ecosistémico de la cuenca del río Misantla y áreas de influencia, Veracruz (CRIMAIV). 
-        Bases para la gestión ambiental y el desarrollo sustentable”, Secretaría de Ciencia, Humanidades, 
-        Tecnología e Innovación (SECIHTI)-Tecnológico Nacional de México (TecNM)/ITSM.
-      </p>
-    </div>
-  </div>
-</div>
+                </div>
 
+                <!-- Contenedor con el texto institucional -->
+                <div class="container mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>
+                                <strong>Como citar:</strong><br>
+                                Organización XYZ. (2025). API de servicios financieros. Recuperado de 
+                                <a href="https://ejemploservicios.com/api/v1" target="_blank">
+                                    https://ejemploservicios.com/api/v1
+                                </a>
+                            </p>
+                            <p>
+                                <strong>Desarrollado por:</strong><br>
+                                <strong>Bringas Murillo Jesus Jair</strong>; durante la realización de su Residencia Profesional 
+                                para la obtención del grado de Ingeniero en sistemas Computacionales del 
+                                Instituto Tecnológico Superior de Misantla (ITSM), Veracruz, México, bajo la supervisión y 
+                                coordinación del Dr. Ojilve Ramón Medrano Pérez, en el marco del proyecto No. CIR/045/2024 
+                                "Estudio ecosistémico de la cuenca del río Misantla y áreas de influencia, Veracruz (CRIMAIV). 
+                                Bases para la gestión ambiental y el desarrollo sustentable", Secretaría de Ciencia, Humanidades, 
+                                Tecnología e Innovación (SECIHTI)-Tecnológico Nacional de México (TecNM)/ITSM.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======== Formulario de sugerencias ======== -->
+                <div class="container mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">¿Tienes sugerencias o comentarios?</h5>
+                            <p class="text-center mb-4">Escríbenos tu nombre y mensaje (máximo 300 caracteres):</p>
+
+                            <form id="sugerenciaForm">
+                                <div class="mb-3">
+                                    <label for="nombreSugerencia" class="form-label">Nombre</label>
+                                    <input type="text" id="nombreSugerencia" class="form-control" placeholder="Tu nombre" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="mensajeSugerencia" class="form-label">Mensaje</label>
+                                    <textarea id="mensajeSugerencia" class="form-control" rows="4" maxlength="300" placeholder="Escribe tu sugerencia aquí..." required></textarea>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Enviar sugerencia</button>
+                                </div>
+                            </form>
+
+                            <div id="resultadoSugerencia" class="mt-3 text-center"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -197,12 +221,12 @@
             </div>
         </div>
     </div>
+
     <footer class="site-footer mt-4">
         <p>Proyecto de Residencia - API de Datos Climatológicos CONAGUA</p>
-      </footer>
-      
+    </footer>
     
-<!-- Toasts para notificaciones -->
+    <!-- Toasts para notificaciones -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <!-- Toast de éxito en descarga -->
         <div id="toastDescarga" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -227,10 +251,66 @@
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="/static/script.js"></script>
 
+    <!-- SCRIPT PARA EL FORMULARIO DE SUGERENCIAS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("✅ DOM completamente cargado");
+            
+            const form = document.getElementById("sugerenciaForm");
+            const resultado = document.getElementById("resultadoSugerencia");
+            
+            console.log("🔍 Formulario encontrado:", form);
+            console.log("🔍 Elemento resultado encontrado:", resultado);
+            
+            if (form) {
+                form.addEventListener("submit", async function(e) {
+                    e.preventDefault();
+                    console.log("🎯 Formulario enviado - evento capturado");
+                    
+                    const nombre = document.getElementById("nombreSugerencia").value.trim();
+                    const mensaje = document.getElementById("mensajeSugerencia").value.trim();
+                    
+                    console.log("📝 Datos capturados:", { nombre, mensaje });
+                    
+                    if (!nombre || !mensaje) {
+                        console.log("⚠️ Campos incompletos");
+                        resultado.innerHTML = `<p class="text-danger">Por favor completa todos los campos.</p>`;
+                        return;
+                    }
+                    
+                    resultado.innerHTML = `<p class="text-info">Enviando sugerencia...</p>`;
+                    console.log("🔄 Iniciando fetch...");
+                    
+                    try {
+                        const res = await fetch("/api/enviar_sugerencia", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ nombre, mensaje }),
+                        });
+                        
+                        console.log("📨 Respuesta recibida - Status:", res.status);
+                        const data = await res.json();
+                        console.log("📊 Datos de respuesta:", data);
+                        
+                        if (res.ok) {
+                            resultado.innerHTML = `<p class="text-success">✅ ¡Gracias por tu sugerencia! Se ha enviado correctamente.</p>`;
+                            form.reset();
+                        } else {
+                            resultado.innerHTML = `<p class="text-danger">❌ Error: ${data.detail || "No se pudo enviar el mensaje."}</p>`;
+                        }
+                    } catch (err) {
+                        console.error("💥 Error en fetch:", err);
+                        resultado.innerHTML = `<p class="text-danger">❌ Ocurrió un error al enviar la sugerencia.</p>`;
+                    }
+                });
+            } else {
+                console.warn("⚠️ No se encontró el formulario de sugerencias");
+            }
+        });
+    </script>
 </body>
 </html>
