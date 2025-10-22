@@ -1,0 +1,86 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.header {
+    background: linear-gradient(135deg, #0181b3 0%, #00669e 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: none;
+}
+.card-header {
+    background-color: #006994;
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+}
+.btn-primary {
+    background-color: #006994;
+    border-color: #005c83;
+}
+.btn-primary:hover {
+    background-color: #005c83;
+    border-color: #004d6d;
+}
+.stats-card {
+    text-align: center;
+    padding: 15px;
+}
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #006994;
+}
+.map-container {
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.filter-section {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+footer {
+    background-color: #006994;
+    color: white;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+/* ====== Footer de ancho completo ====== */
+.site-footer {
+    background-color: #006994;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    width: 100vw;              /* Ocupa todo el ancho del viewport */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+  
+  .site-footer p {
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  
+

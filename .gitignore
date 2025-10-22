@@ -1,0 +1,23 @@
+# Entornos virtuales
+fastapi-env/
+venv/
+.env
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Configuración local de VS Code
+.vscode/
+
+# Archivos grandes o innecesarios
+*.zip
+*.shp
+*.dbf
+*.prj
+*.cpg
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

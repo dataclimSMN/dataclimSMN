@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Datos Climatológicos - CONAGUA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <!-- ======== Encabezado con logos y título centrado ======== -->
+    <div class="header text-center"> 
+        <div class="container-fluid px-4"> 
+          <!-- Logos institucionales -->
+          <div class="row align-items-center justify-content-between g-0">
+            
+            <!-- Izquierda: ITSM + TecNM -->
+            <div class="col-4 col-md-3 text-start ps-3">
+              <img src="/static/TecNM.png" alt="TecNM" class="img-fluid" style="max-height: 120px; padding-left: 150px;">
+              <img src="/static/ITSM_LogoInstitucional.png" alt="ITSM" class="img-fluid" style="max-height: 120px;">
+            </div>
+      
+            <!-- Centro: título y subtítulo -->
+            <div class="col-4 col-md-6 text-center">
+              <h1 class="display-4 fw-bold">DataClim-SMN</h1>
+              <p class="lead">API para la descarga de datos climatológicos del Servicio Meteorológico Nacional (SMN), México</p>
+            </div>
+      
+            <!-- Derecha: SECIHTI -->
+            <div class="col-4 col-md-3 text-end pe-3">
+              <img src="/static/SECIHTI_LogoInstitucional.png" alt="SECIHTI" class="img-fluid" style="max-height: 200px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="filter-section">
+                    <h4>Filtros de Búsqueda</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                              <label for="estadoSelect" class="form-label">Estado</label>
+                              <select class="form-select" id="estadoSelect">
+                                <option value="">Seleccionar estado</option>
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <div class="mb-3">
+                              <label for="municipioSelect" class="form-label">Municipio</label>
+                              <select class="form-select" id="municipioSelect" disabled>
+                                <option value="">Seleccionar municipio</option>
+                                <!-- la opción TODOS se agrega dinámicamente en script.js -->
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <div class="mb-3">
+                              <label for="estacionSelect" class="form-label">Estación</label>
+                              <select class="form-select" id="estacionSelect" disabled>
+                                <option value="">Seleccionar estación</option>
+                                <!-- la opción TODAS se agrega dinámicamente en script.js -->
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <div class="mb-3">
+                              <label for="dataSelect" class="form-label">Tipo de Datos</label>
+                              <select class="form-select" id="dataSelect" disabled>
+                                <option value="">Seleccionar tipo de dato</option>
+                                <option value="TODOS">Todos</option>
+                                <option value="DIARIOS">Diarios</option>
+                                <option value="MENSUALES">Mensuales</option>
+                                <option value="NORMALES_1961_1990">Normales 1961-1990</option>
+                                <option value="NORMALES_1971_2000">Normales 1971-2000</option>
+                                <option value="NORMALES_1981_2010">Normales 1981-2010</option>
+                                <option value="NORMALES_1991_2020">Normales 1991-2020</option>
+                                <option value="EXTREMOS">Extremos</option>
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <div class="mb-3">
+                              <label for="statusSelect" class="form-label">Situación</label>
+                              <select class="form-select" id="statusSelect">
+                                <option value="">Todas</option>
+                                <option value="OPERANDO">Operativas</option>
+                                <option value="SUSPENDIDA">Suspendidas</option>
+                              </select>
+                            </div>
+                          </div>
+                          
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-primary me-md-2" type="button" id="btnBuscar">
+                            <i class="bi bi-search"></i> Buscar Estaciones
+                        </button>
+                        <button class="btn btn-success" type="button" id="btnDescargar" disabled>
+                            <i class="bi bi-download"></i> Descargar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Mapa de Estaciones Meteorológicas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="map" class="map-container"></div>
+                    </div>
+                    <!-- Contenedor con el texto institucional -->
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-body">
+      <p>
+        <strong>Como citar:</strong>
+        <p>Organización XYZ. (2025). API de servicios financieros. Recuperado de 
+        <a href="https://ejemploservicios.com/api/v1" target="_blank">
+          https://ejemploservicios.com/api/v1
+        </a></p>
+      </p>
+      <p>
+       <p><strong> Desarrollado por:</strong></p>
+        <strong>Bringas Murillo Jesus Jair</strong>; durante la realización de su Residencia Profesional 
+        para la obtención del grado de Ingeniero en sistemas Computacionales del 
+        Instituto Tecnológico Superior de Misantla (ITSM), Veracruz, México, bajo la supervisión y 
+        coordinación del Dr. Ojilve Ramón Medrano Pérez, en el marco del proyecto No. CIR/045/2024 
+        “Estudio ecosistémico de la cuenca del río Misantla y áreas de influencia, Veracruz (CRIMAIV). 
+        Bases para la gestión ambiental y el desarrollo sustentable”, Secretaría de Ciencia, Humanidades, 
+        Tecnología e Innovación (SECIHTI)-Tecnológico Nacional de México (TecNM)/ITSM.
+      </p>
+    </div>
+  </div>
+</div>
+
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Estadísticas de Estaciones</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="totalEstaciones">0</div>
+                                    <div class="stats-label">Total de Estaciones</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="estacionesOperativas">0</div>
+                                    <div class="stats-label">Estaciones Operativas</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="estacionesInoperativas">0</div>
+                                    <div class="stats-label">Estaciones Inoperativas</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="municipiosCubiertos">0</div>
+                                    <div class="stats-label">Municipios Cubiertos</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Información de la Estación Seleccionada</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="estacionInfo">
+                            <p class="text-center">Seleccione una estación para ver sus detalles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="site-footer mt-4">
+        <p>Proyecto de Residencia - API de Datos Climatológicos CONAGUA</p>
+      </footer>
+      
+    
+<!-- Toasts para notificaciones -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Toast de éxito en descarga -->
+        <div id="toastDescarga" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Descarga exitosa</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Los archivos se han descargado correctamente.
+            </div>
+        </div>
+
+        <!-- Toast de error -->
+        <div id="toastError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Error al descargar los archivos. Intente nuevamente.
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
