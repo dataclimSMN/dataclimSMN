@@ -7,6 +7,7 @@ import csv
 import io
 import zipfile
 import re
+import os
 import geopandas as gpd
 from shapely.geometry import mapping
 import numpy as np
@@ -22,10 +23,17 @@ app = FastAPI(title="API de Estaciones Climatológicas - ITSM")
 # -------- CONFIGURAR STATIC --------
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Ruta raíz que acepta GET y HEAD
 @app.api_route("/", methods=["GET", "HEAD"])
 def serve_home():
-    return FileResponse("static/index.html")
-
+    index_path = os.path.join("static", "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    else:
+        return Response(
+            content="✅ DataClim-SMN API is running on Render, pero no se encontró el index.html",
+            media_type="text/plain"
+        )
 
 KML_FILE = "data/doc.kml"
 
