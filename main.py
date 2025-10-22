@@ -18,32 +18,14 @@ from pathlib import Path
 
 app = FastAPI(title="API de Estaciones Climatológicas - ITSM")
 
-@app.middleware("http")
-async def log_user_requests(request: Request, call_next):
-    start_time = datetime.now()
-    response = await call_next(request)
-    duration = (datetime.now() - start_time).total_seconds()
-
-    # Datos básicos del request
-    ip = request.client.host
-    path = request.url.path
-    query = str(request.query_params)
-    status_code = response.status_code
-
-    log_entry = f"[{datetime.now()}] {ip} {path} {query} → {status_code} ({duration:.2f}s)\n"
-
-    # Guardar en archivo local
-    with open("logs_uso_api.txt", "a", encoding="utf-8") as f:
-        f.write(log_entry)
-
-    return response
 
 # -------- CONFIGURAR STATIC --------
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def serve_home():
     return FileResponse("static/index.html")
+
 
 KML_FILE = "data/doc.kml"
 
