@@ -81,7 +81,7 @@ estadoSelect.addEventListener("change", async function () {
       }
     });
   } catch (err) {
-    console.error("❌ Error al cargar municipios:", err);
+    console.error("Error al cargar municipios:", err);
     alert("Hubo un error al obtener municipios del estado seleccionado.");
   }
 });
@@ -130,7 +130,7 @@ municipioSelect.addEventListener("change", async function () {
     // Habilitar el select de estaciones
     estacionSelect.disabled = false;
   } catch (err) {
-    console.error("❌ Error al cargar estaciones:", err);
+    console.error("Error al cargar estaciones:", err);
     alert("Hubo un error al obtener las estaciones del municipio seleccionado.");
   }
 });
@@ -151,7 +151,7 @@ btnBuscar.addEventListener("click", async function () {
   const dataType = dataSelect.value || "";
   const status = statusSelect.value || "";
 
-  // 🔍 Validaciones previas
+  //  Validaciones previas
   if (!estado || estado === "") {
     alert("Por favor selecciona un estado.");
     return;
@@ -167,7 +167,7 @@ btnBuscar.addEventListener("click", async function () {
     return;
   }
 
-  // ⚠️ Nueva validación: el usuario debe elegir un tipo de dato
+  //  Nueva validación: el usuario debe elegir un tipo de dato
   if (!dataType || dataType === "") {
     alert("Selecciona un tipo de dato antes de continuar.");
     return;
@@ -194,7 +194,7 @@ btnBuscar.addEventListener("click", async function () {
       estaciones = estaciones.filter((e) => e.situacion === status);
     }
 
-    // 🚫 Si no hay resultados
+    //  Si no hay resultados
     if (estaciones.length === 0) {
       alert("No se encontraron estaciones para los filtros seleccionados.");
       estacionInfo.innerHTML =
@@ -204,12 +204,12 @@ btnBuscar.addEventListener("click", async function () {
       return;
     }
 
-    // ✅ Mostrar resultados
+    //  Mostrar resultados
     mostrarEnMapa(estaciones);
     actualizarEstadisticas(estaciones);
     actualizarInfoEstacion(estaciones[0]);
 
-    // ⚙️ Nuevo: pintar polígonos según selección
+    //  Nuevo: pintar polígonos según selección
     console.log("[BUSCAR] Pintando polígonos:", { estado, municipio });
     await cargarGeoJSON(estado, municipio);
 
@@ -262,7 +262,7 @@ function mostrarEnMapa(estaciones) {
 
 /// ---------------- Actualizar información y estadísticas ----------------
 function actualizarInfoEstacion(estacion) {
-  // 🧩 Detectar qué tipos de datos tiene disponibles
+  //  Detectar qué tipos de datos tiene disponibles
   const tiposDisponibles = [];
   if (estacion.diarios) tiposDisponibles.push(" Diarios");
   if (estacion.mensuales) tiposDisponibles.push(" Mensuales");
@@ -272,7 +272,7 @@ function actualizarInfoEstacion(estacion) {
   if (estacion.normales_1991_2020) tiposDisponibles.push(" Normales 1991-2020");
   if (estacion.extremos) tiposDisponibles.push(" Extremos");
 
-  // 🧩 Convertir a lista visual
+  //  Convertir a lista visual
   const listaTipos = tiposDisponibles.length > 0
     ? `<ul>${tiposDisponibles.map(t => `<li>${t}</li>`).join("")}</ul>`
     : "<p class='text-muted'>No tiene datos disponibles.</p>";
@@ -342,7 +342,7 @@ btnDescargar.addEventListener("click", async function () {
     url += `&situacion=${encodeURIComponent(status)}`;
   }
 
-  console.log("📥 URL generada:", url);
+  console.log(" URL generada:", url);
 
   try {
     btnDescargar.disabled = true;
@@ -350,7 +350,7 @@ btnDescargar.addEventListener("click", async function () {
 
     const response = await fetch(url);
 
-    // 🧠 NUEVO: manejar caso 404 del backend (sin datos disponibles)
+    // NUEVO: manejar caso 404 del backend (sin datos disponibles)
     if (response.status === 404) {
       const msg = await response.json();
       alert(msg.error || "No se encontraron estaciones con datos del tipo seleccionado.");
@@ -454,7 +454,7 @@ async function cargarGeoJSON(estado, municipio) {
     }
 
     // -------- MUNICIPIOS --------
-    // ⚠️ Solo si el usuario seleccionó un municipio o TODOS
+    // Solo si el usuario seleccionó un municipio o TODOS
     if (m && m.trim() !== "" && m.toUpperCase() !== "NINGUNO") {
       if (m.toUpperCase() === "TODOS") {
         // Caso 1: todos los municipios del estado
@@ -510,58 +510,60 @@ async function cargarGeoJSON(estado, municipio) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("✅ Script cargado correctamente");
+  console.log(" Script cargado correctamente");
 
   const form = document.getElementById("sugerenciaForm");
   const resultado = document.getElementById("resultadoSugerencia");
 
-  console.log("🔍 Formulario encontrado:", form);
-  console.log("🔍 Elemento resultado encontrado:", resultado);
+  console.log(" Formulario encontrado:", form);
+  console.log(" Elemento resultado encontrado:", resultado);
 
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      console.log("🎯 Formulario enviado - evento capturado");
+      console.log(" Formulario enviado - evento capturado");
 
       const nombre = document.getElementById("nombreSugerencia").value.trim();
+      const correo = document.getElementById("correoSugerencia").value.trim();
+      const institucion = document.getElementById("institucionSugerencia").value.trim();
       const mensaje = document.getElementById("mensajeSugerencia").value.trim();
 
-      console.log("📝 Datos capturados:", { nombre, mensaje });
+      console.log(" Datos capturados:", { nombre, correo, institucion, mensaje });
 
-      if (!nombre || !mensaje) {
+      if (!nombre || !correo || !institucion || !mensaje) {
         console.log("⚠️ Campos incompletos");
-        resultado.innerHTML = `<p class="text-danger">Por favor completa todos los campos.</p>`;
+        resultado.innerHTML = `<p class="text-danger"> Por favor completa todos los campos.</p>`;
         return;
       }
 
-      resultado.innerHTML = `<p class="text-info">Enviando sugerencia...</p>`;
-      console.log("🔄 Iniciando fetch...");
+      resultado.innerHTML = `<p class="text-info"> Enviando sugerencia...</p>`;
+      console.log(" Iniciando fetch...");
 
       try {
         const baseURL = window.location.origin;
         const res = await fetch(`${baseURL}/api/enviar_sugerencia`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nombre, mensaje }),
+          body: JSON.stringify({ nombre, correo, institucion, mensaje }),
         });
 
-        console.log("📨 Respuesta recibida - Status:", res.status);
-        
-        const data = await res.json();
-        console.log("📊 Datos de respuesta:", data);
+        console.log(" Respuesta recibida - Status:", res.status);
 
-        if (res.ok) {
+        const data = await res.json();
+        console.log(" Datos de respuesta:", data);
+
+        if (res.ok && data.status === "ok") {
           resultado.innerHTML = `<p class="text-success">✅ ¡Gracias por tu sugerencia! Se ha enviado correctamente.</p>`;
           form.reset();
         } else {
           resultado.innerHTML = `<p class="text-danger">❌ Error: ${data.detail || "No se pudo enviar el mensaje."}</p>`;
         }
       } catch (err) {
-        console.error("💥 Error en fetch:", err);
+        console.error("Error en fetch:", err);
         resultado.innerHTML = `<p class="text-danger">❌ Ocurrió un error al enviar la sugerencia: ${err.message}</p>`;
       }
     });
   } else {
-    console.warn("⚠️ No se encontró el formulario de sugerencias en el DOM.");
+    console.warn(" No se encontró el formulario de sugerencias en el DOM.");
   }
 });

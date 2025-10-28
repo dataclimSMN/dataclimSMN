@@ -9,32 +9,34 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <!-- ======== Encabezado con logos y título centrado ======== -->
-    <div class="header text-center"> 
-        <div class="container-fluid px-4"> 
-          <!-- Logos institucionales -->
-          <div class="row align-items-center justify-content-between g-0">
+ <!-- ======== Encabezado con logos y título centrado ======== -->
+<!-- ======== Encabezado con logos MÁS GRANDES ======== -->
+<div class="header text-center">
+    <div class="container-fluid px-2 px-md-4">
+        <!-- Logos institucionales -->
+        <div class="row align-items-center justify-content-center g-0">
             
-            <!-- Izquierda: ITSM + TecNM -->
-            <div class="col-4 col-md-3 text-start ps-3">
-              <img src="/static/TecNM.png" alt="TecNM" class="img-fluid" style="max-height: 120px; padding-left: 150px;">
-              <img src="/static/ITSM_LogoInstitucional.png" alt="ITSM" class="img-fluid" style="max-height: 120px;">
+            <!-- Izquierda: SECIHTI -->
+            <div class="col-4 col-md-3 d-flex justify-content-start">
+                <img src="/static/SECIHTI_LogoInstitucional.png" alt="SECIHTI" class="img-fluid" style="max-height: 100px; max-width: 100%;">
             </div>
       
             <!-- Centro: título y subtítulo -->
-            <div class="col-4 col-md-6 text-center">
-              <h1 class="display-4 fw-bold">DataClim-SMN</h1>
-              <!-- CORREGIDO: Quité las llaves dobles }} -->
-              <p class="lead">API para la descarga de datos climatológicos del Servicio Meteorológico Nacional (SMN), México</p>
+            <div class="col-12 col-md-6 text-center order-first order-md-0 mt-2 mt-md-0">
+                <h1 class="h3 h-md-2 fw-bold">DataClim-SMN</h1>
+                <p class="small d-none d-md-block">API para la descarga de datos climatológicos del Servicio Meteorológico Nacional (SMN), México</p>
+                <p class="small d-block d-md-none">API Datos Climatológicos SMN</p>
             </div>
       
-            <!-- Derecha: SECIHTI -->
-            <div class="col-4 col-md-3 text-end pe-3">
-              <img src="/static/SECIHTI_LogoInstitucional.png" alt="SECIHTI" class="img-fluid" style="max-height: 200px;">
+           <!-- Derecha: TecNM + ITSM -->
+            <div class="col-4 col-md-3 d-flex justify-content-end gap-3 gap-md-4 pe-3 pe-md-4">
+                <img src="/static/TecNM.png" alt="TecNM" class="img-fluid" style="max-height: 125px; max-width: 45%;">
+                <img src="/static/ITSM_LogoInstitucional.png" alt="ITSM" class="img-fluid" style="max-height: 110px; max-width: 45%;">
             </div>
-          </div>
         </div>
     </div>
+</div>
+
 
     <div class="container">
         <div class="row">
@@ -150,22 +152,64 @@
                 <div class="container mt-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title text-center">¿Tienes sugerencias o comentarios?</h5>
-                            <p class="text-center mb-4">Escríbenos tu nombre y mensaje (máximo 300 caracteres):</p>
-
-                            <form id="sugerenciaForm">
+                            <h5 class="card-title text-center">Comentarios</h5>
+                            
+                            <<form id="sugerenciaForm" class="mt-4">
                                 <div class="mb-3">
                                     <label for="nombreSugerencia" class="form-label">Nombre</label>
-                                    <input type="text" id="nombreSugerencia" class="form-control" placeholder="Tu nombre" required />
+                                    <input
+                                    type="text"
+                                    id="nombreSugerencia"
+                                    class="form-control"
+                                    placeholder="Tu nombre completo"
+                                    maxlength="100"
+                                    required
+                                    />
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="correoSugerencia" class="form-label">Correo electrónico</label>
+                                    <input
+                                    type="email"
+                                    id="correoSugerencia"
+                                    class="form-control"
+                                    placeholder="ejemplo@correo.com"
+                                    maxlength="100"
+                                    required
+                                    />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="institucionSugerencia" class="form-label">Institución</label>
+                                    <input
+                                    type="text"
+                                    id="institucionSugerencia"
+                                    class="form-control"
+                                    placeholder="Ej. Instituto Tecnológico Superior de Misantla"
+                                    maxlength="150"
+                                    required
+                                    />
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="mensajeSugerencia" class="form-label">Mensaje</label>
-                                    <textarea id="mensajeSugerencia" class="form-control" rows="4" maxlength="300" placeholder="Escribe tu sugerencia aquí..." required></textarea>
+                                    <textarea
+                                    id="mensajeSugerencia"
+                                    class="form-control"
+                                    rows="4"
+                                    maxlength="300"
+                                    placeholder="Escribe tu sugerencia aquí..."
+                                    required
+                                    ></textarea>
                                 </div>
+
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary">Enviar sugerencia</button>
+                                    <button type="submit" class="btn btn-primary px-4">Enviar sugerencia</button>
                                 </div>
-                            </form>
+
+                                <!-- Aquí aparecerán los mensajes de éxito o error -->
+                                <div id="resultadoSugerencia" class="mt-3 text-center"></div>
+                                </form>
 
                             <div id="resultadoSugerencia" class="mt-3 text-center"></div>
                         </div>
@@ -223,7 +267,7 @@
     </div>
 
     <footer class="site-footer mt-4">
-        <p>Proyecto de Residencia - API de Datos Climatológicos CONAGUA</p>
+        <p>API de datos climatológicos del Servicio Meteorológico Nacional (SMN)</p>
     </footer>
     
     <!-- Toasts para notificaciones -->
@@ -254,63 +298,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="/static/script.js"></script>
-
-    <!-- SCRIPT PARA EL FORMULARIO DE SUGERENCIAS -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("✅ DOM completamente cargado");
-            
-            const form = document.getElementById("sugerenciaForm");
-            const resultado = document.getElementById("resultadoSugerencia");
-            
-            console.log("🔍 Formulario encontrado:", form);
-            console.log("🔍 Elemento resultado encontrado:", resultado);
-            
-            if (form) {
-                form.addEventListener("submit", async function(e) {
-                    e.preventDefault();
-                    console.log("🎯 Formulario enviado - evento capturado");
-                    
-                    const nombre = document.getElementById("nombreSugerencia").value.trim();
-                    const mensaje = document.getElementById("mensajeSugerencia").value.trim();
-                    
-                    console.log("📝 Datos capturados:", { nombre, mensaje });
-                    
-                    if (!nombre || !mensaje) {
-                        console.log("⚠️ Campos incompletos");
-                        resultado.innerHTML = `<p class="text-danger">Por favor completa todos los campos.</p>`;
-                        return;
-                    }
-                    
-                    resultado.innerHTML = `<p class="text-info">Enviando sugerencia...</p>`;
-                    console.log("🔄 Iniciando fetch...");
-                    
-                    try {
-                        const res = await fetch("/api/enviar_sugerencia", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ nombre, mensaje }),
-                        });
-                        
-                        console.log("📨 Respuesta recibida - Status:", res.status);
-                        const data = await res.json();
-                        console.log("📊 Datos de respuesta:", data);
-                        
-                        if (res.ok) {
-                            resultado.innerHTML = `<p class="text-success">✅ ¡Gracias por tu sugerencia! Se ha enviado correctamente.</p>`;
-                            form.reset();
-                        } else {
-                            resultado.innerHTML = `<p class="text-danger">❌ Error: ${data.detail || "No se pudo enviar el mensaje."}</p>`;
-                        }
-                    } catch (err) {
-                        console.error("💥 Error en fetch:", err);
-                        resultado.innerHTML = `<p class="text-danger">❌ Ocurrió un error al enviar la sugerencia.</p>`;
-                    }
-                });
-            } else {
-                console.warn("⚠️ No se encontró el formulario de sugerencias");
-            }
-        });
-    </script>
 </body>
 </html>

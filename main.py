@@ -19,7 +19,9 @@ from pathlib import Path
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+import resend
+from dotenv import load_dotenv
 
 app = FastAPI(title="API de Estaciones Climatológicas - ITSM")
 
@@ -421,7 +423,7 @@ def get_estados_geojson(estado: str = Query("TODOS")):
         subset = gdf_estados
         print(f"[DEBUG] Todos los estados: {len(subset)}")
 
-    # 🔁 Reproyectar a EPSG:4326
+    # Reproyectar a EPSG:4326
     subset = subset.to_crs(epsg=4326)
 
     return JSONResponse(content=json.loads(subset.to_json()))
@@ -452,7 +454,7 @@ def get_municipios_geojson(
         subset = subset[subset["NOMGEO"].str.upper().str.contains(municipio.upper())]
         print(f"[DEBUG] Municipios después de filtrar municipio: {len(subset)}")
 
-    # 🔁 Reproyectar a EPSG:4326
+    # Reproyectar a EPSG:4326
     subset = subset.to_crs(epsg=4326)
 
     print(f"[DEBUG] Municipios devueltos OK: {len(subset)}")
@@ -598,55 +600,46 @@ def descargar_csv(
         media_type="application/zip",
         headers={"Content-Disposition": f"attachment; filename={zip_filename}"}
     )
-# Modelo de datos para que Swagger muestre los campos
+load_dotenv()  # Carga variables locales (.env)
+
+resend.api_key = os.getenv("RESEND_API_KEY")
+
+# Modelo de datos extendido para Swagger
 class Sugerencia(BaseModel):
     nombre: str
+    correo: EmailStr
+    institucion: str
     mensaje: str
 
 @app.post("/api/enviar_sugerencia")
 async def enviar_sugerencia(data: Sugerencia):
-    print(f"[DEBUG] Datos recibidos: {data}")
-    
-    nombre = data.nombre.strip()
-    mensaje = data.mensaje.strip()
-    
-    print(f"[DEBUG] Nombre procesado: '{nombre}'")
-    print(f"[DEBUG] Mensaje procesado: '{mensaje}'")
-
-    if not nombre or not mensaje:
-        return {"status": "error", "detail": "Campos incompletos"}
-
-    # ======= CONFIGURACIÓN DEL CORREO =======
-    remitente = "dataclimsmn@gmail.com"
-    destinatario = "dataclimsmn@gmail.com"
-    contraseña = os.getenv("GMAIL_APP_PASSWORD")  
-
-    asunto = "Nuevo mensaje de sugerencia - DataClim SMN"
-    cuerpo = f"""
-    Has recibido una nueva sugerencia desde la API DataClim-SMN.
-
-        Nombre: {nombre}
-        Mensaje:
-    {mensaje}
-
-    Enviado el {datetime.now().strftime("%d/%m/%Y a las %H:%M:%S")}
-    """
-
-    msg = MIMEMultipart()
-    msg["From"] = remitente
-    msg["To"] = destinatario
-    msg["Subject"] = asunto
-    msg.attach(MIMEText(cuerpo, "plain"))
-
+    print(f"[DEBUG] Sugerencia recibida: {data.dict()}")
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(remitente, contraseña)
-            server.send_message(msg)
+        # Formato HTML para el correo
+        html_body = f"""
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+            <h2 style="color: #004aad;">Nueva sugerencia desde DataClim-SMN</h2>
+            <p><strong>Nombre:</strong> {data.nombre}</p>
+            <p><strong>Correo:</strong> {data.correo}</p>
+            <p><strong>Institución:</strong> {data.institucion}</p>
+            <p><strong>Mensaje:</strong><br>{data.mensaje}</p>
+            <hr>
+            <p style="font-size: 12px; color: #555;">
+                Enviado el {datetime.now().strftime("%d/%m/%Y a las %H:%M:%S")}
+            </p>
+        </div>
+        """
 
-        print(f"[INFO] Sugerencia enviada correctamente por {nombre}")
+        resend.Emails.send({
+            "from": "dataclimsmn@resend.dev",     # remitente técnico
+            "to": "dataclimsmn@gmail.com",         # tu correo real
+            "subject": f" Nueva sugerencia de {data.nombre}",
+            "html": html_body
+        })
+
+        print("[OK] Correo enviado correctamente.")
         return {"status": "ok", "detail": "Sugerencia enviada correctamente"}
 
     except Exception as e:
         print(f"[ERROR] No se pudo enviar el correo: {e}")
-        return {"status": "error", "detail": str(e)}
+        return {"status": "error", "detail": str(e)}    
